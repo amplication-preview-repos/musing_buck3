@@ -1,0 +1,49 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Camper {
+  bookings    Booking[]
+  createdAt   DateTime  @default(now())
+  email       String?
+  fullName    String?
+  id          String    @id @default(cuid())
+  phoneNumber Int?
+  updatedAt   DateTime  @updatedAt
+}
+
+model Owner {
+  createdAt   DateTime @default(now())
+  email       String?
+  fullName    String?
+  id          String   @id @default(cuid())
+  phoneNumber Int?
+  updatedAt   DateTime @updatedAt
+}
+
+model Booking {
+  camper         Camper?       @relation(fields: [camperId], references: [id])
+  camperId       String?
+  campingSpace   CampingSpace? @relation(fields: [campingSpaceId], references: [id])
+  campingSpaceId String?
+  createdAt      DateTime      @default(now())
+  date           DateTime?
+  id             String        @id @default(cuid())
+  updatedAt      DateTime      @updatedAt
+}
+
+model CampingSpace {
+  available   Boolean?
+  bookings    Booking[]
+  createdAt   DateTime  @default(now())
+  description String?
+  id          String    @id @default(cuid())
+  location    String?
+  name        String?
+  updatedAt   DateTime  @updatedAt
+}
